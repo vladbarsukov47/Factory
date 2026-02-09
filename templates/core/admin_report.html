@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Отчёт</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f6f7fb;}
+    .wrap{max-width:980px;margin:0 auto;padding:16px;}
+    .card{background:#fff;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+    table{width:100%;border-collapse:collapse;}
+    th,td{padding:10px 6px;border-bottom:1px solid #eee;font-size:14px;text-align:left;}
+    input{padding:10px;border-radius:10px;border:1px solid #d9d9e3;}
+    button{padding:10px 14px;border-radius:10px;border:0;background:#111;color:#fff;cursor:pointer;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h2 style="margin:0 0 10px;">Отчёт по сотрудникам</h2>
+    <form method="get">
+      c <input type="date" name="from" value="{{ date_from }}">
+      по <input type="date" name="to" value="{{ date_to }}">
+      <button type="submit">Показать</button>
+    </form>
+    <div style="height:10px;"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Сотрудник</th>
+          <th>Штук</th>
+          <th>Сдельно</th>
+          <th>Часов</th>
+          <th>Почасово</th>
+          <th>Итого</th>
+          <th>Шт/час</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+          <tr>
+            <td>{{ r.user }}</td>
+            <td>{{ r.qty }}</td>
+            <td>{{ r.piece }}</td>
+            <td>{{ r.hours }}</td>
+            <td>{{ r.hourly }}</td>
+            <td><b>{{ r.total }}</b></td>
+            <td>{{ r.productivity }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7">Нет данных за период.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
