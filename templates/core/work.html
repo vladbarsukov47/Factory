@@ -18,10 +18,7 @@
       </div>
       <div class="muted">Пользователь: {{ request.user.username }}</div>
       <div class="muted spacer-xs">
-        Сдельно сегодня: <b>{{ piece_today }}</b><br>
-        Часы сегодня: <b>{{ hours_today }}</b><br>
         Итого сегодня: <b>{{ total_today }}</b><br>
-        Выработка/час: <b>{{ productivity }}</b>
       </div>
 
       {% if open_shift %}

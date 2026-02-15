@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -23,8 +23,12 @@ class Material(models.Model):
         verbose_name = "Материал"
         verbose_name_plural = "Материалы"
 
+    def stock_display(self) -> Decimal:
+        precision = Decimal("0.01") if self.unit in (Unit.METER, Unit.KG) else Decimal("0.1")
+        return self.stock.quantize(precision, rounding=ROUND_HALF_UP)
+
     def __str__(self) -> str:
-        return f"{self.name} ({self.stock} {self.get_unit_display()})"
+        return f"{self.name} ({self.stock_display()} {self.get_unit_display()})"
 
 
 class Product(models.Model):
@@ -389,4 +393,3 @@ class Shift(models.Model):
         self.hours = self._calc_hours()
         self.full_clean()
         self.save(update_fields=["ended_at", "hours"])
-

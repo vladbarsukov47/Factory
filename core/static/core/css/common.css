@@ -36,13 +36,13 @@ body {
 }
 
 .spacer-xs {
-  height: 8px;
+  min-height: 8px;
 }
 
 .spacer-sm {
-  height: 10px;
+  min-height: 10px;
 }
 
 .spacer-md {
-  height: 12px;
+  min-height: 12px;
 }

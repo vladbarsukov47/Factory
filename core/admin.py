@@ -7,10 +7,16 @@ from decimal import Decimal
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ("name", "unit", "stock", "is_active")
+    list_display = ("name", "unit", "stock_rounded", "is_active")
     list_filter = ("unit", "is_active")
     search_fields = ("name",)   # ← ВАЖНО
     ordering = ("name",)
+
+    def stock_rounded(self, obj):
+        return obj.stock_display()
+
+    stock_rounded.short_description = "Остаток"
+    stock_rounded.admin_order_field = "stock"
 
 @admin.register(ProductionOperation)
 class ProductionOperationAdmin(admin.ModelAdmin):
