@@ -1,6 +1,6 @@
 from __future__ import annotations
 from django.db.models import Sum
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
@@ -84,8 +84,8 @@ def production_create(request):
         messages.error(request, "Выберите партию.")
 
     try:
-        qty = float(qty_raw)
-    except ValueError:
+        qty = Decimal(qty_raw)
+    except InvalidOperation:
         messages.error(request, "Введите корректное количество.")
         return redirect("core:work")
 

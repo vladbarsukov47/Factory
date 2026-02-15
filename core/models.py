@@ -27,6 +27,11 @@ class Material(models.Model):
         precision = Decimal("0.01") if self.unit in (Unit.METER, Unit.KG) else Decimal("0.1")
         return self.stock.quantize(precision, rounding=ROUND_HALF_UP)
 
+    def clean(self):
+        super().clean()
+        if self.stock is not None:
+            self.stock = self.stock_display()
+
     def __str__(self) -> str:
         return f"{self.name} ({self.stock_display()} {self.get_unit_display()})"
 
@@ -42,8 +47,16 @@ class Product(models.Model):
         verbose_name = "Продукция"
         verbose_name_plural = "Продукция"
 
+    def stock_display(self) -> Decimal:
+        return self.stock.quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+
+    def clean(self):
+        super().clean()
+        if self.stock is not None:
+            self.stock = self.stock_display()
+
     def __str__(self) -> str:
-        return f"{self.name} (остаток {self.stock} шт, ставка {self.piece_rate})"
+        return f"{self.name} (остаток {self.stock_display()} шт, ставка {self.piece_rate})"
 
 
 class BillOfMaterial(models.Model):
@@ -199,6 +212,8 @@ class ProductionOperation(models.Model):
         super().clean()
         if self.qty is None or self.qty <= 0:
             raise ValidationError({"qty": "Количество должно быть больше 0."})
+        if self.qty % 1 != 0:
+            raise ValidationError({"qty": "Количество продукции должно быть целым числом."})
 
     @transaction.atomic
     def save(self, *args, **kwargs):

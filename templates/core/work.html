@@ -51,7 +51,7 @@
           {% for item in batches %}
             <option value="{{ item.obj.id }}">
               {{ item.obj.name }} — {{ item.obj.product.name }}
-              (план {{ item.obj.planned_qty }}, сделано {{ item.done }}, осталось {{ item.remaining }})
+              (план {{ item.obj.planned_qty|floatformat:0 }}, сделано {{ item.done|floatformat:0 }}, осталось {{ item.remaining|floatformat:0 }})
             </option>
         {% endfor %}
         </select>
@@ -84,7 +84,7 @@
               <tr>
                 <td>{{ op.created_at|date:"H:i" }}</td>
                 <td>{{ op.product.name }}</td>
-                <td>{{ op.qty }}</td>
+                <td>{{ op.qty|floatformat:0 }}</td>
                 <td>{{ op.pay_total }}</td>
               </tr>
             {% endfor %}

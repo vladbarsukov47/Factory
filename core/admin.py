@@ -38,12 +38,17 @@ class BillOfMaterialInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("name", "stock", "piece_rate", "is_active")
+    list_display = ("name", "stock_rounded", "piece_rate", "is_active")
     list_filter = ("is_active",)
     search_fields = ("name",)
     ordering = ("name",)
     inlines = (BillOfMaterialInline,)
 
+    def stock_rounded(self, obj):
+        return obj.stock_display()
+
+    stock_rounded.short_description = "Остаток"
+    stock_rounded.admin_order_field = "stock"
 
 
 admin.site.register(models.StockMovement)
