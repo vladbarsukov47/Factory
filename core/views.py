@@ -36,7 +36,6 @@ def work(request):
     # смены за сегодня (закрытые)
     shifts_qs = Shift.objects.filter(employee=request.user, started_at__date=today).order_by("-started_at")
     hours_today = shifts_qs.aggregate(s=Sum("hours"))["s"] or Decimal("0.00")
-    hourly_today = shifts_qs.aggregate(s=Sum("pay_total"))["s"] or Decimal("0.00")
 
     # активная смена
     open_shift = Shift.objects.filter(employee=request.user, ended_at__isnull=True).first()
@@ -45,7 +44,7 @@ def work(request):
     total_qty = ops_qs.aggregate(s=Sum("qty"))["s"] or Decimal("0.00")
     productivity = (total_qty / hours_today).quantize(Decimal("0.01")) if hours_today and hours_today > 0 else Decimal("0.00")
 
-    total_today = (piece_today + hourly_today).quantize(Decimal("0.01"))
+    total_today = piece_today.quantize(Decimal("0.01"))
 
     products = Product.objects.filter(is_active=True).order_by("name")
 
@@ -64,7 +63,11 @@ def work(request):
     return render(request, "core/work.html", {
         "ops": ops,
         "batches": batches,
-        # остальные твои поля (total_today, productivity и т.п.) оставляй как есть
+        "piece_today": piece_today,
+        "hours_today": hours_today,
+        "productivity": productivity,
+        "total_today": total_today,
+        "open_shift": open_shift,
     })
 
 
@@ -92,7 +95,6 @@ def production_create(request):
         messages.error(request, "Партия не найдена.")
         return redirect("core:work")
 
-    # 🔴 ВСТАВИТЬ ВОТ СЮДА
     if batch.status == BatchStatus.PLANNED:
         batch.status = BatchStatus.IN_PROGRESS
         batch.save(update_fields=["status"])
@@ -140,7 +142,7 @@ def shift_stop(request):
         return redirect("core:work")
 
     open_shift.close()
-    messages.success(request, f"Смена закрыта. Часы: {open_shift.hours}, начислено: {open_shift.pay_total}")
+    messages.success(request, f"Смена закрыта. Часы: {open_shift.hours}")
     return redirect("core:work")
 
 @staff_member_required
@@ -162,26 +164,26 @@ def admin_report(request):
 
     # агрегация по сотруднику
     ops_by = ops.values("employee__username").annotate(piece=Sum("pay_total"), qty=Sum("qty")).order_by("employee__username")
-    sh_by = shifts.values("employee__username").annotate(hours=Sum("hours"), hourly=Sum("pay_total")).order_by("employee__username")
+    sh_by = shifts.values("employee__username").annotate(hours=Sum("hours")).order_by("employee__username")
 
     # склеим в словарь
     result = {}
     for row in ops_by:
         u = row["employee__username"]
-        result.setdefault(u, {"qty": Decimal("0.00"), "piece": Decimal("0.00"), "hours": Decimal("0.00"), "hourly": Decimal("0.00")})
+        result.setdefault(u, {"qty": Decimal("0.00"), "piece": Decimal("0.00"), "hours": Decimal("0.00")})
         result[u]["qty"] = row["qty"] or Decimal("0.00")
         result[u]["piece"] = row["piece"] or Decimal("0.00")
 
     for row in sh_by:
         u = row["employee__username"]
-        result.setdefault(u, {"qty": Decimal("0.00"), "piece": Decimal("0.00"), "hours": Decimal("0.00"), "hourly": Decimal("0.00")})
+        result.setdefault(u, {"qty": Decimal("0.00"), "piece": Decimal("0.00"), "hours": Decimal("0.00")})
         result[u]["hours"] = row["hours"] or Decimal("0.00")
-        result[u]["hourly"] = row["hourly"] or Decimal("0.00")
+
 
     # посчитаем итого и выработку/час
     rows = []
     for u, v in sorted(result.items()):
-        total = (v["piece"] + v["hourly"]).quantize(Decimal("0.01"))
+        total = v["piece"].quantize(Decimal("0.01"))
         prod = (v["qty"] / v["hours"]).quantize(Decimal("0.01")) if v["hours"] and v["hours"] > 0 else Decimal("0.00")
         rows.append({"user": u, **v, "total": total, "productivity": prod})
 

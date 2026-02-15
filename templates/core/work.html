@@ -1,29 +1,13 @@
-<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Рабочий экран</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f6f7fb;}
-    .wrap{max-width:720px;margin:0 auto;padding:16px;}
-    .card{background:#fff;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
-    h1{font-size:20px;margin:0 0 8px;}
-    label{display:block;font-size:13px;margin:10px 0 6px;color:#333;}
-    select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #d9d9e3;font-size:16px;background:#fff;}
-    button{width:100%;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;}
-    .btn{background:#111;color:#fff;}
-    .muted{color:#666;font-size:13px;}
-    .msg{padding:10px 12px;border-radius:10px;margin:10px 0;}
-    .msg.err{background:#ffe9e9;color:#8b0000;}
-    .msg.ok{background:#e9ffef;color:#0b6b2b;}
-    table{width:100%;border-collapse:collapse;}
-    th,td{padding:10px 6px;border-bottom:1px solid #eee;font-size:14px;text-align:left;}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-    .logout a{font-size:13px;color:#111;text-decoration:none;}
-  </style>
-</head>
-<body>
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Рабочий экран{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/work.css' %}">
+{% endblock %}
+
+{% block content %}
   <div class="wrap">
     <div class="card">
       <div class="top">
@@ -33,9 +17,9 @@
         </div>
       </div>
       <div class="muted">Пользователь: {{ request.user.username }}</div>
-      <div class="muted" style="margin-top:6px;">
+      <div class="muted spacer-xs">
         Сдельно сегодня: <b>{{ piece_today }}</b><br>
-        Часы сегодня: <b>{{ hours_today }}</b> — Почасово: <b>{{ hourly_today }}</b><br>
+        Часы сегодня: <b>{{ hours_today }}</b><br>
         Итого сегодня: <b>{{ total_today }}</b><br>
         Выработка/час: <b>{{ productivity }}</b>
       </div>
@@ -45,7 +29,7 @@
           {% csrf_token %}
           <button class="btn" type="submit">Закончить смену</button>
         </form>
-        <div class="muted" style="margin-top:8px;">Смена начата: {{ open_shift.started_at|date:"H:i" }}</div>
+        <div class="muted spacer-xs">Смена начата: {{ open_shift.started_at|date:"H:i" }}</div>
       {% else %}
         <form method="post" action="{% url 'core:shift_start' %}">
           {% csrf_token %}
@@ -53,7 +37,7 @@
         </form>
       {% endif %}
 
-      <div style="height:12px"></div>
+       <div class="spacer-md"></div>
 
 
       {% if messages %}
@@ -72,14 +56,13 @@
               {{ item.obj.name }} — {{ item.obj.product.name }}
               (план {{ item.obj.planned_qty }}, сделано {{ item.done }}, осталось {{ item.remaining }})
             </option>
-{% endfor %}
-
+        {% endfor %}
         </select>
 
         <label>Количество (шт)</label>
         <input name="qty" inputmode="decimal" placeholder="например: 10" required>
 
-        <div style="height:12px"></div>
+        <div class="spacer-md"></div>
         <button class="btn" type="submit">Я сделал</button>
       </form>
     </div>
@@ -87,10 +70,10 @@
     <div class="card">
       <h1>Сегодняшние операции</h1>
       <div class="muted">Показаны последние 100 записей</div>
-      <div style="height:10px"></div>
+      <div class="spacer-sm"></div>
 
       {% if ops %}
-        <table>
+        <table class="table">
           <thead>
             <tr>
               <th>Время</th>
@@ -114,9 +97,12 @@
         <div class="muted">Пока нет операций за сегодня.</div>
       {% endif %}
     </div>
-    <div class="muted" style="margin-top:8px;">
+    <div class="muted spacer-xs">
       Если партий нет — попросите администратора создать партию в админке.
     </div>
   </div>
-</body>
-</html>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'core/js/work.js' %}"></script>
+{% endblock %}

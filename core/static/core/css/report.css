@@ -1,0 +1,22 @@
+.wrap {
+  max-width: 980px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d9d9e3;
+}
+
+button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 0;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+.section-title {
+  margin: 0 0 10px;
+}

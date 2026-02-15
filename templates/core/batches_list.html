@@ -1,25 +1,19 @@
-<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Партии</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f6f7fb;}
-    .wrap{max-width:980px;margin:0 auto;padding:16px;}
-    .card{background:#fff;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
-    table{width:100%;border-collapse:collapse;}
-    th,td{padding:10px 6px;border-bottom:1px solid #eee;font-size:14px;text-align:left;}
-    .muted{color:#666;font-size:13px;}
-  </style>
-</head>
-<body>
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Партии{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/batches.css' %}">
+{% endblock %}
+
+{% block content %}
 <div class="wrap">
   <div class="card">
-    <h2 style="margin:0 0 8px;">Партии</h2>
+    <h2 class="section-title">Партии</h2>
     <div class="muted">Последние 200 партий</div>
-    <div style="height:10px"></div>
-    <table>
+    <div class="spacer-sm"></div>
+    <table class="table">
       <thead>
         <tr>
           <th>Партия</th>
@@ -49,5 +43,4 @@
     </table>
   </div>
 </div>
-</body>
-</html>
+{% endblock %}
