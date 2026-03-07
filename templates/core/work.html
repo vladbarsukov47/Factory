@@ -12,8 +12,14 @@
     <div class="card">
       <div class="top">
         <h1>Рабочий экран</h1>
-        <div class="logout">
-          <a href="/admin/logout/">Выйти</a>
+        <div class="actions">
+          {% if request.user.is_staff %}
+            <a class="link" href="/admin/">Админ-панель</a>
+          {% endif %}
+          <form method="post" action="{% url 'core:logout' %}">
+            {% csrf_token %}
+            <button class="link-btn" type="submit">Выйти</button>
+          </form>
         </div>
       </div>
       <div class="muted">Пользователь: {{ request.user.username }}</div>

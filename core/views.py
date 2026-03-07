@@ -16,7 +16,7 @@ def home(request):
     # Удобно: если залогинен — сразу в рабочий экран
     if request.user.is_authenticated:
         return redirect("core:work")
-    return redirect("/admin/login/?next=/work/")
+    return redirect("core:login")
 
 
 @login_required

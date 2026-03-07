@@ -1,0 +1,49 @@
+.auth-wrap {
+  max-width: 420px;
+  padding-top: 40px;
+}
+
+.auth-card h1 {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  margin: 10px 0 6px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d9d9e3;
+  font-size: 16px;
+  background: #fff;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #111;
+  color: #fff;
+}
+
+.msg {
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.msg.err {
+  background: #ffe9e9;
+  color: #8b0000;
+}

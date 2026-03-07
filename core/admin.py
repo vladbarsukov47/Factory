@@ -1,9 +1,13 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 from . import models
 from .models import StockAdjustment, Product, Material, ProductionOperation, BillOfMaterial
 from .models import Shift, Batch
 from django.db.models import Sum
 from decimal import Decimal
+
+if admin.site.is_registered(Group):
+    admin.site.unregister(Group)
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):

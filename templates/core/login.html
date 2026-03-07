@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Вход{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="wrap auth-wrap">
+    <div class="card auth-card">
+      <h1>Вход в аккаунт</h1>
+
+      {% if form.errors %}
+        <div class="msg err">Неверный логин или пароль.</div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <label for="id_username">Логин</label>
+        <input id="id_username" name="username" autocomplete="username" required autofocus>
+
+        <label for="id_password">Пароль</label>
+        <input id="id_password" type="password" name="password" autocomplete="current-password" required>
+
+        <input type="hidden" name="next" value="{{ next|default:'' }}">
+
+        <div class="spacer-md"></div>
+        <button class="btn" type="submit">Войти</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

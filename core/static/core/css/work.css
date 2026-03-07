@@ -64,8 +64,25 @@ button {
   gap: 10px;
 }
 
-.logout a {
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.link {
   font-size: 13px;
   color: #111;
   text-decoration: none;
+}
+
+.link-btn {
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  color: #111;
+  text-decoration: none;
+  cursor: pointer;
 }
